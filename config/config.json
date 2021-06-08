@@ -1,0 +1,20 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "staff-movement-webpart-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/staffMovementWebpart/StaffMovementWebpartWebPart.js",
+          "manifest": "./src/webparts/staffMovementWebpart/StaffMovementWebpartWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "StaffMovementWebpartWebPartStrings": "lib/webparts/staffMovementWebpart/loc/{locale}.js",
+    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js",
+    "PropertyControlStrings": "node_modules/@pnp/spfx-property-controls/lib/loc/{locale}.js"
+  }
+}
