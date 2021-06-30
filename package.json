@@ -9,10 +9,13 @@
   "scripts": {
     "build": "gulp bundle",
     "clean": "gulp clean",
+    "preversion": "node ./tools/pre-version.js",
+    "postversion": "gulp dist",
     "test": "./node_modules/.bin/jest --config ./config/jest.config.json",
     "test:watch": "./node_modules/.bin/jest --config ./config/jest.config.json --watchAll"
   },
   "dependencies": {
+    "@fluentui/react": "^8.18.0",
     "@microsoft/sp-core-library": "1.11.0",
     "@microsoft/sp-lodash-subset": "1.11.0",
     "@microsoft/sp-office-ui-fabric-core": "1.11.0",
@@ -30,6 +33,9 @@
     "react-dom": "16.7.0",
     "react-js-pagination": "^3.0.3",
     "throttle-debounce": "^2.3.0"
+  },
+  "resolutions": {
+    "@types/react": "16.8.8"
   },
   "devDependencies": {
     "@microsoft/rush-stack-compiler-3.3": "0.3.5",
@@ -50,5 +56,9 @@
     "jest": "^23.6.0",
     "jest-junit": "^6.3.0",
     "typescript": "~3.3.x"
+  },
+  "jest-junit": {
+    "output": "temp/test/junit/junit.xml",
+    "usePathForSuiteName": "true"
   }
 }

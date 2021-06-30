@@ -6,13 +6,12 @@ import {
   Log, Environment, EnvironmentType,
 } from '@microsoft/sp-core-library';
 import { SPComponentLoader } from '@microsoft/sp-loader';
-
+import { Icon } from '@fluentui/react/lib/Icon';
 import {
   Persona,
   PersonaSize,
   DocumentCard,
   DocumentCardType,
-  Icon,
 } from 'office-ui-fabric-react';
 
 const EXP_SOURCE: string = 'SPFxDirectory';
@@ -112,7 +111,7 @@ export class PersonaCard extends React.Component<
             ''
           )} */}
           {this.props.profileProperties.Title ? (
-            <div style={{ marginTop: '1em' }}>
+            <div className={styles.flex} style={{ marginTop: '1em', display: 'flex !important' }}>
               <Icon iconName="UserOptional" style={{ fontSize: '14px' }} />
               <span style={{ marginLeft: 5, fontSize: '14px' }}>
                 {' '}
@@ -123,7 +122,7 @@ export class PersonaCard extends React.Component<
             ''
           )}
           {this.props.profileProperties.Department ? (
-            <div style={{ marginTop: '0.5em' }}>
+            <div className={styles.flex} style={{ marginTop: '0.5em', display: 'flex !important' }}>
               <Icon iconName="CityNext" style={{ fontSize: '14px' }} />
               <span style={{ marginLeft: 5, fontSize: '14px' }}>
                 {' '}
@@ -177,6 +176,28 @@ export class PersonaCard extends React.Component<
           ) : (
             ''
           )}
+          {this.props.profileProperties.TransferDate ? (
+            <div className={styles.textOverflow} style={{ marginTop: '0.5em' }}>
+              <Icon iconName="DateTime" style={{ fontSize: '14px' }} />
+              <span style={{ marginLeft: 5, fontSize: '14px' }}>
+                {' '}
+                {this.props.profileProperties.TransferDate}
+              </span>
+            </div>
+          ) : (
+            ''
+          )}
+          {this.props.profileProperties.LastServiceDate ? (
+            <div className={styles.textOverflow} style={{ marginTop: '0.5em' }}>
+              <Icon iconName="DateTime" style={{ fontSize: '14px' }} />
+              <span style={{ marginLeft: 5, fontSize: '14px' }}>
+                {' '}
+                {this.props.profileProperties.LastServiceDate}
+              </span>
+            </div>
+          ) : (
+            ''
+          )}
           {this.props.profileProperties.ReportingOfficer ? (
             <div className={styles.textOverflow} style={{ marginTop: '0.5em' }}>
               <Icon iconName="ManagerSelfService" style={{ fontSize: '14px' }} />
@@ -219,7 +240,7 @@ export class PersonaCard extends React.Component<
     return (
       <div className={styles.personaContainer}>
         {this.state.livePersonaCard
-          ? this._LivePersonaCard()
+          ? this._PersonaCard()
           : this._PersonaCard()}
       </div>
     );

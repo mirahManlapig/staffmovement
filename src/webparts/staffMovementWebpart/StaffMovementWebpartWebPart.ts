@@ -31,15 +31,8 @@ export default class StaffMovementWebpartWebPart extends BaseClientSideWebPart<I
     });
     console.log(this.properties.viewType);
     let items;
-    if (this.properties.viewType == 'New') {
-      items = await this.getListItems(this.properties.viewType);
-    }
-    else if (this.properties.viewType == 'Transfer') {
-      items = await this.getListItems(this.properties.viewType);
-    }
-    else {
-      items = await this.getListItems(this.properties.viewType);
-    }
+    items = await this.getListItems(this.properties.viewType);
+
 
     const element: React.ReactElement<IMovementProps> = React.createElement(
       MovementHook,
@@ -56,41 +49,45 @@ export default class StaffMovementWebpartWebPart extends BaseClientSideWebPart<I
   //get items from the list based on the viewtype NOTE: Change value for query
   public async getListItems(viewType) {
     if (viewType == 'New') {
-      const users: any[] = await sp.web.lists.getByTitle(this.properties.listName).items.select('Name/Title', 'Designation/JobTitle', 'Email_x0020_Address/EMail', 'DID/WorkPhone', 'Mobile_x0020_Number', 'Department', 'Join_x0020_Date', 'Status','Reporting_x0020_Officer/Title').expand('Name', 'Designation', 'Email_x0020_Address', 'DID', 'Reporting_x0020_Officer').orderBy('Join_x0020_Date', false).get();
+      const users: any[] = await sp.web.lists.getByTitle(this.properties.listName).items.select('Name/Title', 'Designation/JobTitle', 'Email_x0020_Address/EMail', 'DID/WorkPhone', 'Mobile_x0020_Number', 'Department', 'Join_x0020_Date', 'Status', 'Reporting_x0020_Officer/Title').expand('Name', 'Designation', 'Email_x0020_Address', 'DID', 'Reporting_x0020_Officer').filter(`Status eq 'New'`).orderBy('Join_x0020_Date', false).get();
       if (users.length > 0) {
         for (let index = 0; index < users.length; index++) {
           let user: any = users[index];
-          user = { ...user, PictureURL: `/_layouts/15/userphoto.aspx?size=M&accountname=${user.Email_x0020_Address.EMail}` };
-          users[index] = user;
+          if (user && user.Email_x0020_Address) {
+            user = { ...user, PictureURL: `/_layouts/15/userphoto.aspx?size=M&accountname=${user.Email_x0020_Address.EMail}` };
+            users[index] = user;
+          }
         }
       }
       console.log(users);
       return users;
     }
-    else if (viewType == 'Tranfer') {
-      const users: any[] = await sp.web.lists.getByTitle(this.properties.listName).items.select('Name/Title', 'Designation/JobTitle', 'Email_x0020_Address/EMail', 'DID/WorkPhone', 'Mobile_x0020_Number', 'Department', 'Transfer_x0020_Date', 'Status','Reporting_x0020_Officer/Title').expand('Name', 'Designation', 'Email_x0020_Address', 'DID','Reporting_x0020_Officer').orderBy('Transfer_x0020_Date', false).get();
+    else if (viewType == 'Transfer') {
+      const users: any[] = await sp.web.lists.getByTitle(this.properties.listName).items.select('Name/Title', 'Designation/JobTitle', 'Email_x0020_Address/EMail', 'DID/WorkPhone', 'Mobile_x0020_Number', 'Department', 'OldDepartment', 'Transfer_x0020_Date', 'Status', 'Reporting_x0020_Officer/Title').expand('Name', 'Designation', 'Email_x0020_Address', 'DID', 'Reporting_x0020_Officer').filter(`Status eq 'Transfer'`).orderBy('Transfer_x0020_Date', false).get();
       if (users.length > 0) {
         for (let index = 0; index < users.length; index++) {
           let user: any = users[index];
-          user = { ...user, PictureURL: `/_layouts/15/userphoto.aspx?size=M&accountname=${user.Email_x0020_Address.EMail}` };
-          users[index] = user;
+          if (user && user.Email_x0020_Address) {
+            user = { ...user, PictureURL: `/_layouts/15/userphoto.aspx?size=M&accountname=${user.Email_x0020_Address.EMail}` };
+            users[index] = user;
+          }
         }
+        return users;
       }
-      return users;
     }
-    else {
-      const users: any[] = await sp.web.lists.getByTitle(this.properties.listName).items.select('Name/Title', 'Designation/JobTitle', 'Email_x0020_Address/EMail', 'DID/WorkPhone', 'Mobile_x0020_Number', 'Department', 'Leave_x0020_Date', 'Status').expand('Name', 'Designation', 'Email_x0020_Address', 'DID').orderBy('Last_x0020_Service_x0020_Date', false).get();
+    else if (viewType == 'Farewell') {
+      const users: any[] = await sp.web.lists.getByTitle(this.properties.listName).items.select('Name/Title', 'Designation/JobTitle', 'Email_x0020_Address/EMail', 'DID/WorkPhone', 'Mobile_x0020_Number', 'Department', 'Last_x0020_Service_x0020_Date', 'Status').expand('Name', 'Designation', 'Email_x0020_Address', 'DID').filter(`Status eq 'Resigned'`).orderBy('Last_x0020_Service_x0020_Date', false).get();
       if (users.length > 0) {
         for (let index = 0; index < users.length; index++) {
           let user: any = users[index];
-          user = { ...user, PictureURL: `/_layouts/15/userphoto.aspx?size=M&accountname=${user.Email_x0020_Address.EMail}` };
-          users[index] = user;
+          if (user && user.Email_x0020_Address) {
+            user = { ...user, PictureURL: `/_layouts/15/userphoto.aspx?size=M&accountname=${user.Email_x0020_Address.EMail}` };
+            users[index] = user;
+          }
         }
+        return users;
       }
-      return users;
     }
-
-
   }
 
   protected onDispose(): void {

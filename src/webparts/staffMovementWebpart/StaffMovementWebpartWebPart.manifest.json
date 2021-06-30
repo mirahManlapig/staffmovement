@@ -19,7 +19,7 @@
     "group": { "default": "Other" },
     "title": { "default": "staff-movement-webpart" },
     "description": { "default": "staff-movement-webpart" },
-    "officeFabricIconFontName": "Page",
+    "officeFabricIconFontName": "ProfileSearch",
     "properties": {
       "description": "staff-movement-webpart"
     }
