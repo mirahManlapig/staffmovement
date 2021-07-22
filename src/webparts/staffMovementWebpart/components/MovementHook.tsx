@@ -84,25 +84,33 @@ const MovementHook: React.FC<IMovementProps> = (props) => {
             var ro = true;
           }
           else ro = false;
-          return (
-            <PersonaCard
-              context={props.context}
-              profileProperties={{
-                DisplayName: user.Name && user.Name.Title ? user.Name.Title : '',
-                Title: user.Designation && user.Designation.JobTitle ? user.Designation.JobTitle : '',
-                PictureUrl: user.PictureURL ? user.PictureURL : '',
-                Email: user.Email_x0020_Address && user.Email_x0020_Address.EMail ? user.Email_x0020_Address.EMail : '',
-                Department: user.Department ? user.Department : '',
-                WorkPhone: user.DID && user.DID.WorkPhone ? user.DID.WorkPhone : '',
-                MobilePhone: user.Mobile_x0020_Number
-                  ? user.Mobile_x0020_Number
-                  : '',
-                TransferDate: user.Transfer_x0020_Date && moment(user.Transfer_x0020_Date).isValid() ? moment(user.Transfer_x0020_Date).format("DD/MM/YYYY") : '',
-                OldDepartment: user.OldDepartment ? user.OldDepartment : '',
-                ReportingOfficer: user.Reporting_x0020_Officer && ro ? user.Reporting_x0020_Officer.Title : ''
-              }}
-            />
-          );
+          var diff = moment(user.Transfer_x0020_Date).diff(moment(new Date), 'days');
+          console.log(diff);
+          if (diff >= -7) {
+            return (
+
+              <PersonaCard
+                context={props.context}
+                profileProperties={{
+                  DisplayName: user.Name && user.Name.Title ? user.Name.Title : '',
+                  Title: user.Designation && user.Designation.JobTitle ? user.Designation.JobTitle : '',
+                  PictureUrl: user.PictureURL ? user.PictureURL : '',
+                  Email: user.Email_x0020_Address && user.Email_x0020_Address.EMail ? user.Email_x0020_Address.EMail : '',
+                  Department: user.Department ? user.Department : '',
+                  WorkPhone: user.DID && user.DID.WorkPhone ? user.DID.WorkPhone : '',
+                  MobilePhone: user.Mobile_x0020_Number
+                    ? user.Mobile_x0020_Number
+                    : '',
+                  TransferDate: user.Transfer_x0020_Date && moment(user.Transfer_x0020_Date).isValid() ? moment(user.Transfer_x0020_Date).format("DD/MM/YYYY") : '',
+                  OldDepartment: user.OldDepartment ? user.OldDepartment : '',
+                  ReportingOfficer: user.Reporting_x0020_Officer && ro ? user.Reporting_x0020_Officer.Title : ''
+                }}
+              />
+            );
+          }
+          else {
+            return;
+          }
         })
         : [];
   }
