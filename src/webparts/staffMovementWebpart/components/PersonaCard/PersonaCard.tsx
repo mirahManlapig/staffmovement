@@ -110,9 +110,9 @@ export class PersonaCard extends React.Component<
           ) : (
             ''
           )} */}
-          {this.props.profileProperties.Title ? (
+          {this.props.viewType != "Transfer" ? this.props.profileProperties.Title ? (
             <div className={styles.flex} style={{ marginTop: '1em', display: 'flex !important' }}>
-              <Icon iconName="UserOptional" style={{ fontSize: '14px' }} />
+              <b> <Icon iconName="UserOptional" style={{ fontSize: '14px', fontWeight: 700 }} /></b>
               <span style={{ marginLeft: 5, fontSize: '14px' }}>
                 {' '}
                 {this.props.profileProperties.Title}
@@ -120,21 +120,11 @@ export class PersonaCard extends React.Component<
             </div>
           ) : (
             ''
-          )}
-          {this.props.profileProperties.Department ? (
-            <div className={styles.flex} style={{ marginTop: '0.5em', display: 'flex !important' }}>
-              <Icon iconName="CityNext" style={{ fontSize: '14px' }} />
-              <span style={{ marginLeft: 5, fontSize: '14px' }}>
-                {' '}
-                {this.props.profileProperties.Department}
-              </span>
-            </div>
-          ) : (
-            ''
-          )}
+          ) : ''}
+
           {this.props.profileProperties.Email ? (
             <div style={{ marginTop: '0.5em' }}>
-              <Icon iconName="Mail" style={{ fontSize: '14px' }} />
+              <b> <Icon iconName="Mail" style={{ fontSize: '14px', fontWeight: 700 }} /></b>
               <span style={{ marginLeft: 5, fontSize: '14px' }}>
                 {' '}
                 {this.props.profileProperties.Email}
@@ -145,7 +135,7 @@ export class PersonaCard extends React.Component<
           )}
           {this.props.profileProperties.WorkPhone ? (
             <div style={{ marginTop: '0.5em' }}>
-              <Icon iconName="Phone" style={{ fontSize: '14px' }} />
+              <b> <Icon iconName="Phone" style={{ fontSize: '14px', fontWeight: 700 }} /></b>
               <span style={{ marginLeft: 5, fontSize: '14px' }}>
                 {' '}
                 {this.props.profileProperties.WorkPhone}
@@ -156,7 +146,7 @@ export class PersonaCard extends React.Component<
           )}
           {this.props.profileProperties.MobilePhone ? (
             <div className={styles.textOverflow} style={{ marginTop: '0.5em' }}>
-              <Icon iconName="CellPhone" style={{ fontSize: '14px' }} />
+              <b> <Icon iconName="CellPhone" style={{ fontSize: '14px', fontWeight: 700 }} /></b>
               <span style={{ marginLeft: 5, fontSize: '14px' }}>
                 {' '}
                 {this.props.profileProperties.MobilePhone}
@@ -165,9 +155,80 @@ export class PersonaCard extends React.Component<
           ) : (
             ''
           )}
+          {this.props.profileProperties.ReportingOfficer && this.props.viewType != "Transfer" ? (
+            <div className={styles.textOverflow} style={{ marginTop: '0.5em' }}>
+              {/* <b> <Icon iconName="ManagerSelfService" style={{ fontSize: '14px', fontWeight: 700 }} /> </b>*/}
+              <b>Reporting Officer:</b>
+              <span style={{ marginLeft: 5, fontSize: '14px' }}>
+                {' '}
+                {this.props.profileProperties.ReportingOfficer}
+              </span>
+            </div>
+          ) : (
+            ''
+          )}
+          {this.props.viewType == "Transfer" ? this.props.profileProperties.OldDesignation ? (
+            <div className={styles.flex} style={{ marginTop: '1em', display: 'flex !important' }}>
+              <b>Previous Designation:</b>
+              <span style={{ marginLeft: 5, fontSize: '14px' }}>
+                {' '}
+                {this.props.profileProperties.OldDesignation}
+              </span>
+            </div>
+          ) : (
+            ''
+          ) : ''}
+          {
+            this.props.profileProperties.OldDepartment && this.props.viewType == "Transfer" ? (
+              <div className={styles.flex} style={{ marginTop: '0.5em', display: 'flex !important' }}>
+                <b>Previous Division:</b>
+                <span style={{ marginLeft: 5, fontSize: '14px' }}>
+                  {' '}
+                  {this.props.profileProperties.OldDepartment}
+                </span>
+              </div>
+            ) : (
+              ''
+            )}
+          {this.props.viewType == "Transfer" ? this.props.profileProperties.Title ? (
+            <div className={styles.flex} style={{ marginTop: '1em', display: 'flex !important' }}>
+              <b>New Designation:</b>
+              <span style={{ marginLeft: 5, fontSize: '14px' }}>
+                {' '}
+                {this.props.profileProperties.Title}
+              </span>
+            </div>
+          ) : (
+            ''
+          ) : ''}
+          {
+            this.props.profileProperties.Department ? (
+              <div className={styles.flex} style={{ marginTop: '0.5em', display: 'flex !important' }}>
+                {this.props.viewType != "Transfer" ? <b>Division:</b> : <b>New Division:</b>}
+                <span style={{ marginLeft: 5, fontSize: '14px' }}>
+                  {' '}
+                  {this.props.profileProperties.Department}
+                </span>
+              </div>
+            ) : (
+              ''
+            )}
+          {this.props.viewType == "Transfer" ? this.props.profileProperties.ReportingOfficer ? (
+            <div className={styles.flex} style={{ marginTop: '1em', display: 'flex !important' }}>
+              <b>New Reporting Officer:</b>
+              <span style={{ marginLeft: 5, fontSize: '14px' }}>
+                {' '}
+                {this.props.profileProperties.ReportingOfficer}
+              </span>
+            </div>
+          ) : (
+            ''
+          ) : ''}
+
           {this.props.profileProperties.JoinDate ? (
             <div className={styles.textOverflow} style={{ marginTop: '0.5em' }}>
-              <Icon iconName="DateTime" style={{ fontSize: '14px' }} />
+              {/* <b> <Icon iconName="DateTime" style={{ fontSize: '14px', fontWeight: 700 }} /> </b>*/}
+              <b>Join Date:</b>
               <span style={{ marginLeft: 5, fontSize: '14px' }}>
                 {' '}
                 {this.props.profileProperties.JoinDate}
@@ -178,7 +239,8 @@ export class PersonaCard extends React.Component<
           )}
           {this.props.profileProperties.TransferDate ? (
             <div className={styles.textOverflow} style={{ marginTop: '0.5em' }}>
-              <Icon iconName="DateTime" style={{ fontSize: '14px' }} />
+              {/* <b> <Icon iconName="DateTime" style={{ fontSize: '14px', fontWeight: 700 }} /></b> */}
+              <b>Effective Date of Transfer: </b>
               <span style={{ marginLeft: 5, fontSize: '14px' }}>
                 {' '}
                 {this.props.profileProperties.TransferDate}
@@ -189,21 +251,11 @@ export class PersonaCard extends React.Component<
           )}
           {this.props.profileProperties.LastServiceDate ? (
             <div className={styles.textOverflow} style={{ marginTop: '0.5em' }}>
-              <Icon iconName="DateTime" style={{ fontSize: '14px' }} />
+              {/* <b> <Icon iconName="DateTime" style={{ fontSize: '14px', fontWeight: 700 }} /> </b>*/}
+              <b>Last Day of Service:</b>
               <span style={{ marginLeft: 5, fontSize: '14px' }}>
                 {' '}
                 {this.props.profileProperties.LastServiceDate}
-              </span>
-            </div>
-          ) : (
-            ''
-          )}
-          {this.props.profileProperties.ReportingOfficer ? (
-            <div className={styles.textOverflow} style={{ marginTop: '0.5em' }}>
-              <Icon iconName="ManagerSelfService" style={{ fontSize: '14px' }} />
-              <span style={{ marginLeft: 5, fontSize: '14px' }}>
-                {' '}
-                {this.props.profileProperties.ReportingOfficer}
               </span>
             </div>
           ) : (

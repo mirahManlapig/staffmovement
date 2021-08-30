@@ -8,7 +8,8 @@ export interface IUserProperties {
   MobilePhone?: string;
   JoinDate?: string;
   TransferDate?: string;
-  LastServiceDate?:string;
+  LastServiceDate?: string;
   ReportingOfficer?: string;
   OldDepartment?: string;
+  OldDesignation?: string;
 }

@@ -46,7 +46,6 @@ const MovementHook: React.FC<IMovementProps> = (props) => {
     setPageSize(props.pageSize);
     if (state.users) _onPageUpdate();
   }, [state.users, props.pageSize]);
-
   if (props.viewType == "New") {
     var movementGrid =
       props.users && props.users.length > 0
@@ -55,28 +54,83 @@ const MovementHook: React.FC<IMovementProps> = (props) => {
             var ro = true;
           }
           else ro = false;
-          return (
-            <PersonaCard
-              context={props.context}
-              profileProperties={{
-                DisplayName: user.Name && user.Name.Title ? user.Name.Title : '',
-                Title: user.Designation && user.Designation.JobTitle ? user.Designation.JobTitle : '',
-                PictureUrl: user.PictureURL ? user.PictureURL : user.PictureURL,
-                Email: user.Email_x0020_Address && user.Email_x0020_Address.EMail ? user.Email_x0020_Address.EMail : '',
-                Department: user.Department ? user.Department : user.Department,
-                WorkPhone: user.DID && user.DID.WorkPhone ? user.DID.WorkPhone : '',
-                MobilePhone: user.Mobile_x0020_Number
-                  ? user.Mobile_x0020_Number
-                  : '',
-                JoinDate: user.Join_x0020_Date && moment(user.Join_x0020_Date).isValid() ? moment(user.Join_x0020_Date).format("DD/MM/YYYY") : '',
-                ReportingOfficer: user.Reporting_x0020_Officer && ro ? user.Reporting_x0020_Officer.Title : ''
-              }}
-            />
-          );
+          if (props.viewType == "New" && user.Status == "New") {
+            var diff = moment(user.Join_x0020_Date).diff(moment(new Date), 'days');
+            console.log(diff);
+            if (diff > 6) {
+              return null;
+            }
+            else {
+              return (
+                <PersonaCard
+                  context={props.context}
+                  profileProperties={{
+                    DisplayName: user.Name && user.Name.Title ? user.Name.Title : '',
+                    Title: user.Designation ? user.Designation : '',
+                    PictureUrl: user.PictureURL ? user.PictureURL : user.PictureURL,
+                    Email: user.Email_x0020_Address && user.Email_x0020_Address.EMail ? user.Email_x0020_Address.EMail : '',
+                    Department: user.Department ? user.Department : user.Department,
+                    WorkPhone: user.DID && user.DID.WorkPhone ? user.DID.WorkPhone : '',
+                    MobilePhone: user.Mobile_x0020_Number
+                      ? user.Mobile_x0020_Number
+                      : '',
+                    JoinDate: user.Join_x0020_Date && moment(user.Join_x0020_Date).isValid() ? moment(user.Join_x0020_Date).format("DD/MM/YYYY") : '',
+                    ReportingOfficer: user.Reporting_x0020_Officer && ro ? user.Reporting_x0020_Officer.Title : ''
+                  }}
+                  viewType={props.viewType}
+                />
+              );
+            }
+          }
         })
         : [];
+
   }
-  if (props.viewType == "Transfer") {
+  if (props.archivalType == "New-Archive") {
+    var movementGrid =
+      props.users && props.users.length > 0
+        ? props.users.map((user: any) => {
+          console.log(user.Name);
+          if (typeof user.Reporting_x0020_Officer === 'object') {
+            var ro = true;
+          }
+          else ro = false;
+          if ((user.Status == "Active")) { //New-Archive
+
+            var diff = moment(user.Join_x0020_Date).diff(moment(new Date), 'days');
+            console.log(diff);
+            if (diff >= -90 && diff <= -7) {
+              return (
+                <PersonaCard
+                  context={props.context}
+                  profileProperties={{
+                    DisplayName: user.Name && user.Name.Title ? user.Name.Title : '',
+                    Title: user.Designation ? user.Designation : '',
+                    PictureUrl: user.PictureURL ? user.PictureURL : user.PictureURL,
+                    Email: user.Email_x0020_Address && user.Email_x0020_Address.EMail ? user.Email_x0020_Address.EMail : '',
+                    Department: user.Department ? user.Department : user.Department,
+                    WorkPhone: user.DID && user.DID.WorkPhone ? user.DID.WorkPhone : '',
+                    MobilePhone: user.Mobile_x0020_Number
+                      ? user.Mobile_x0020_Number
+                      : '',
+                    JoinDate: user.Join_x0020_Date && moment(user.Join_x0020_Date).isValid() ? moment(user.Join_x0020_Date).format("DD/MM/YYYY") : '',
+                    ReportingOfficer: user.Reporting_x0020_Officer && ro ? user.Reporting_x0020_Officer.Title : ''
+                  }}
+                  viewType={props.viewType}
+                />
+              );
+
+            }
+            else {
+              return null;
+            }
+          }
+        })
+        : [];
+
+  }
+
+  if (props.viewType == "Transfer") { //test transfer tmr
     var movementGrid =
       props.users && props.users.length > 0
         ? props.users.map((user: any) => {
@@ -84,54 +138,161 @@ const MovementHook: React.FC<IMovementProps> = (props) => {
             var ro = true;
           }
           else ro = false;
-          var diff = moment(user.Transfer_x0020_Date).diff(moment(new Date), 'days');
-          console.log(diff);
-          if (diff >= -7) {
-            return (
-
-              <PersonaCard
-                context={props.context}
-                profileProperties={{
-                  DisplayName: user.Name && user.Name.Title ? user.Name.Title : '',
-                  Title: user.Designation && user.Designation.JobTitle ? user.Designation.JobTitle : '',
-                  PictureUrl: user.PictureURL ? user.PictureURL : '',
-                  Email: user.Email_x0020_Address && user.Email_x0020_Address.EMail ? user.Email_x0020_Address.EMail : '',
-                  Department: user.Department ? user.Department : '',
-                  WorkPhone: user.DID && user.DID.WorkPhone ? user.DID.WorkPhone : '',
-                  MobilePhone: user.Mobile_x0020_Number
-                    ? user.Mobile_x0020_Number
-                    : '',
-                  TransferDate: user.Transfer_x0020_Date && moment(user.Transfer_x0020_Date).isValid() ? moment(user.Transfer_x0020_Date).format("DD/MM/YYYY") : '',
-                  OldDepartment: user.OldDepartment ? user.OldDepartment : '',
-                  ReportingOfficer: user.Reporting_x0020_Officer && ro ? user.Reporting_x0020_Officer.Title : ''
-                }}
-              />
-            );
-          }
-          else {
-            return;
+          if (props.viewType == "Transfer" && user.Status == "Transfer") {
+            var diff = moment(user.Transfer_x0020_Date).diff(moment(new Date), 'days');
+            if (diff > 6) {
+              return null;
+            }
+            else {
+              return (
+                <PersonaCard
+                  context={props.context}
+                  profileProperties={{
+                    DisplayName: user.Name && user.Name.Title ? user.Name.Title : '',
+                    Title: user.Designation ? user.Designation : '',
+                    PictureUrl: user.PictureURL ? user.PictureURL : '',
+                    Email: user.Email_x0020_Address && user.Email_x0020_Address.EMail ? user.Email_x0020_Address.EMail : '',
+                    Department: user.Department ? user.Department : '',
+                    WorkPhone: user.DID && user.DID.WorkPhone ? user.DID.WorkPhone : '',
+                    MobilePhone: user.Mobile_x0020_Number
+                      ? user.Mobile_x0020_Number
+                      : '',
+                    TransferDate: user.Transfer_x0020_Date && moment(user.Transfer_x0020_Date).isValid() ? moment(user.Transfer_x0020_Date).format("DD/MM/YYYY") : '',
+                    OldDepartment: user.OldDepartment ? user.OldDepartment : '',
+                    OldDesignation: user.OldDepartment ? user.OldDesignation : '',
+                    ReportingOfficer: user.Reporting_x0020_Officer && ro ? user.Reporting_x0020_Officer.Title : ''
+                  }}
+                  viewType={props.viewType}
+                />
+              );
+            }
           }
         })
         : [];
+  }
+
+  if (props.archivalType == "Transfer-Archive") {
+    var movementGrid =
+      props.users && props.users.length > 0
+        ? props.users.map((user: any) => {
+          console.log(user.Name);
+          if (typeof user.Reporting_x0020_Officer === 'object') {
+            var ro = true;
+          }
+          else ro = false;
+          if ((user.Status == "Active")) { //New-Archive
+
+            var diff = moment(user.Transfer_x0020_Date).diff(moment(new Date), 'days');
+            console.log(diff);
+            if (diff >= -90 && diff <= -7) {
+              return (
+                <PersonaCard
+                  context={props.context}
+                  profileProperties={{
+                    DisplayName: user.Name && user.Name.Title ? user.Name.Title : '',
+                    Title: user.Designation ? user.Designation : '',
+                    PictureUrl: user.PictureURL ? user.PictureURL : '',
+                    Email: user.Email_x0020_Address && user.Email_x0020_Address.EMail ? user.Email_x0020_Address.EMail : '',
+                    Department: user.Department ? user.Department : '',
+                    WorkPhone: user.DID && user.DID.WorkPhone ? user.DID.WorkPhone : '',
+                    MobilePhone: user.Mobile_x0020_Number
+                      ? user.Mobile_x0020_Number
+                      : '',
+                    TransferDate: user.Transfer_x0020_Date && moment(user.Transfer_x0020_Date).isValid() ? moment(user.Transfer_x0020_Date).format("DD/MM/YYYY") : '',
+                    OldDepartment: user.OldDepartment ? user.OldDepartment : '',
+                    OldDesignation: user.OldDepartment ? user.OldDesignation : '',
+                    ReportingOfficer: user.Reporting_x0020_Officer && ro ? user.Reporting_x0020_Officer.Title : ''
+                  }}
+                  viewType={props.viewType}
+                />
+              );
+
+            }
+            else {
+              return null;
+            }
+          }
+        })
+        : [];
+
   }
   if (props.viewType == "Farewell") {
     var movementGrid =
       props.users && props.users.length > 0
         ? props.users.map((user: any) => {
-          return (
-            <PersonaCard
-              context={props.context}
-              profileProperties={{
-                DisplayName: user.Name && user.Name.Title ? user.Name.Title : '',
-                Title: user.Designation && user.Designation.JobTitle ? user.Designation.JobTitle : '',
-                PictureUrl: user.PictureURL ? user.PictureURL : '',
-                Department: user.Department ? user.Department : '',
-                LastServiceDate: user.Last_x0020_Service_x0020_Date && moment(user.Last_x0020_Service_x0020_Date).isValid() ? moment(user.Last_x0020_Service_x0020_Date).format("DD/MM/YYYY") : '',
-              }}
-            />
-          );
+          if (props.viewType == "Farewell" && user.Status == "Resigned") {
+            var diff = moment(user.Last_x0020_Service_x0020_Date).diff(moment(new Date), 'days');
+            console.log(diff);
+            if (diff > 13) {
+              return null;
+            }
+            else {
+              return (
+
+                <PersonaCard
+                  context={props.context}
+                  profileProperties={{
+                    DisplayName: user.Name && user.Name.Title ? user.Name.Title : '',
+                    Title: user.Designation ? user.Designation : '',
+                    PictureUrl: user.PictureURL ? user.PictureURL : '',
+                    Department: user.Department ? user.Department : '',
+                    Email: user.Email_x0020_Address && user.Email_x0020_Address.EMail ? user.Email_x0020_Address.EMail : '',
+                    WorkPhone: user.DID && user.DID.WorkPhone ? user.DID.WorkPhone : '',
+                    MobilePhone: user.Mobile_x0020_Number
+                      ? user.Mobile_x0020_Number
+                      : '',
+                    LastServiceDate: user.Last_x0020_Service_x0020_Date && moment(user.Last_x0020_Service_x0020_Date).isValid() ? moment(user.Last_x0020_Service_x0020_Date).format("DD/MM/YYYY") : '',
+                  }}
+                  viewType={props.viewType}
+                />
+              );
+            }
+          }
         })
         : [];
+  }
+
+  if (props.archivalType == "Farewell-Archive") {
+    var movementGrid =
+      props.users && props.users.length > 0
+        ? props.users.map((user: any) => {
+          console.log(user.Name);
+          if (typeof user.Reporting_x0020_Officer === 'object') {
+            var ro = true;
+          }
+          else ro = false;
+          if ((user.Status == "Inactive")) { //New-Archive
+
+            var diff = moment(user.Last_x0020_Service_x0020_Date).diff(moment(new Date), 'days');
+            console.log(diff);
+            if (diff >= -30 && diff <= -7) {
+              return (
+                <PersonaCard
+                  context={props.context}
+                  profileProperties={{
+                    DisplayName: user.Name && user.Name.Title ? user.Name.Title : '',
+                    Title: user.Designation ? user.Designation : '',
+                    PictureUrl: user.PictureURL ? user.PictureURL : '',
+                    Department: user.Department ? user.Department : '',
+                    Email: user.Email_x0020_Address && user.Email_x0020_Address.EMail ? user.Email_x0020_Address.EMail : '',
+                    WorkPhone: user.DID && user.DID.WorkPhone ? user.DID.WorkPhone : '',
+                    MobilePhone: user.Mobile_x0020_Number
+                      ? user.Mobile_x0020_Number
+                      : '',
+                    LastServiceDate: user.Last_x0020_Service_x0020_Date && moment(user.Last_x0020_Service_x0020_Date).isValid() ? moment(user.Last_x0020_Service_x0020_Date).format("DD/MM/YYYY") : '',
+                  }}
+                  viewType={props.viewType}
+                />
+              );
+
+            }
+            else {
+              return null;
+            }
+          }
+        })
+        : [];
+
   }
 
   return (
@@ -172,7 +333,8 @@ const MovementHook: React.FC<IMovementProps> = (props) => {
                                         currentPage={currentPage} />
                                 </div> */}
 
-                  <Stack horizontal horizontalAlign="center" wrap tokens={wrapStackTokens}>
+                  {/* <Stack horizontal horizontalAlign="center" wrap tokens={wrapStackTokens} style={{ width: "100em" }}> */}
+                  <Stack horizontalAlign="center" wrap tokens={wrapStackTokens} style={{ width: "100em", maxWidth: "100em" }}>
                     <div style={{ marginTop: "2em", marginLeft: "3em" }}>{movementGrid}</div>
                   </Stack>
                   {/* <div style={{ width: '100%', display: 'inline-block' }}>

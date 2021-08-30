@@ -20,6 +20,7 @@ import { IMovementProps } from "./components/IMovementProps";
 export interface IStaffMovementWebpartWebPartProps {
   listName: string;
   viewType: string;
+  archivalType: string;
   pageSize: number;
 }
 
@@ -29,7 +30,6 @@ export default class StaffMovementWebpartWebPart extends BaseClientSideWebPart<I
     sp.setup({
       spfxContext: this.context
     });
-    console.log(this.properties.viewType);
     let items;
     items = await this.getListItems(this.properties.viewType);
 
@@ -40,6 +40,7 @@ export default class StaffMovementWebpartWebPart extends BaseClientSideWebPart<I
         context: this.context,
         pageSize: this.properties.pageSize,
         viewType: this.properties.viewType,
+        archivalType: this.properties.archivalType,
         users: items
       }
     );
@@ -49,7 +50,7 @@ export default class StaffMovementWebpartWebPart extends BaseClientSideWebPart<I
   //get items from the list based on the viewtype NOTE: Change value for query
   public async getListItems(viewType) {
     if (viewType == 'New') {
-      const users: any[] = await sp.web.lists.getByTitle(this.properties.listName).items.select('Name/Title', 'Designation/JobTitle', 'Email_x0020_Address/EMail', 'DID/WorkPhone', 'Mobile_x0020_Number', 'Department', 'Join_x0020_Date', 'Status', 'Reporting_x0020_Officer/Title').expand('Name', 'Designation', 'Email_x0020_Address', 'DID', 'Reporting_x0020_Officer').filter(`Status eq 'New'`).orderBy('Join_x0020_Date', false).get();
+      const users: any[] = await sp.web.lists.getByTitle(this.properties.listName).items.select('Name/Title', 'Designation', 'OldDesignation', 'Email_x0020_Address/EMail', 'DID/WorkPhone', 'Mobile_x0020_Number', 'Department', 'Join_x0020_Date', 'Status', 'Reporting_x0020_Officer/Title').expand('Name', 'Email_x0020_Address', 'DID', 'Reporting_x0020_Officer').filter(`Status eq 'New' or Status eq 'Active'`).orderBy('Join_x0020_Date', false).get();
       if (users.length > 0) {
         for (let index = 0; index < users.length; index++) {
           let user: any = users[index];
@@ -63,7 +64,7 @@ export default class StaffMovementWebpartWebPart extends BaseClientSideWebPart<I
       return users;
     }
     else if (viewType == 'Transfer') {
-      const users: any[] = await sp.web.lists.getByTitle(this.properties.listName).items.select('Name/Title', 'Designation/JobTitle', 'Email_x0020_Address/EMail', 'DID/WorkPhone', 'Mobile_x0020_Number', 'Department', 'OldDepartment', 'Transfer_x0020_Date', 'Status', 'Reporting_x0020_Officer/Title').expand('Name', 'Designation', 'Email_x0020_Address', 'DID', 'Reporting_x0020_Officer').filter(`Status eq 'Transfer'`).orderBy('Transfer_x0020_Date', false).get();
+      const users: any[] = await sp.web.lists.getByTitle(this.properties.listName).items.select('Name/Title', 'Designation', 'OldDesignation', 'Email_x0020_Address/EMail', 'DID/WorkPhone', 'Mobile_x0020_Number', 'Department', 'OldDepartment', 'Transfer_x0020_Date', 'Status', 'Reporting_x0020_Officer/Title').expand('Name', 'Email_x0020_Address', 'DID', 'Reporting_x0020_Officer').filter(`Status eq 'Transfer' or Status eq 'Active'`).orderBy('Transfer_x0020_Date', false).get();
       if (users.length > 0) {
         for (let index = 0; index < users.length; index++) {
           let user: any = users[index];
@@ -76,7 +77,7 @@ export default class StaffMovementWebpartWebPart extends BaseClientSideWebPart<I
       }
     }
     else if (viewType == 'Farewell') {
-      const users: any[] = await sp.web.lists.getByTitle(this.properties.listName).items.select('Name/Title', 'Designation/JobTitle', 'Email_x0020_Address/EMail', 'DID/WorkPhone', 'Mobile_x0020_Number', 'Department', 'Last_x0020_Service_x0020_Date', 'Status').expand('Name', 'Designation', 'Email_x0020_Address', 'DID').filter(`Status eq 'Resigned'`).orderBy('Last_x0020_Service_x0020_Date', false).get();
+      const users: any[] = await sp.web.lists.getByTitle(this.properties.listName).items.select('Name/Title', 'Designation', 'OldDesignation', 'Email_x0020_Address/EMail', 'DID/WorkPhone', 'Mobile_x0020_Number', 'Department', 'Last_x0020_Service_x0020_Date', 'Status').expand('Name', 'Email_x0020_Address', 'DID').filter(`Status eq 'Resigned' or Status eq 'Inactive'`).orderBy('Last_x0020_Service_x0020_Date', false).get();
       if (users.length > 0) {
         for (let index = 0; index < users.length; index++) {
           let user: any = users[index];
@@ -117,7 +118,15 @@ export default class StaffMovementWebpartWebPart extends BaseClientSideWebPart<I
                   options: [
                     { key: 'New', text: 'New' },
                     { key: 'Transfer', text: 'Transfer' },
-                    { key: 'Farewell', text: 'Farewell' }
+                    { key: 'Farewell', text: 'Farewell' },
+                  ]
+                }),
+                PropertyPaneDropdown('archivalType', {
+                  label: 'Archival Type',
+                  options: [
+                    { key: 'New-Archive', text: 'New-Archive' },
+                    { key: 'Transfer-Archive', text: 'Transfer-Archive' },
+                    { key: 'Farewell-Archive', text: 'Farewell-Archive' }
                   ]
                 }),
                 PropertyPaneSlider('pageSize', {

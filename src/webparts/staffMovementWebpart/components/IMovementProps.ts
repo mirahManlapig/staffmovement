@@ -4,5 +4,6 @@ export interface IMovementProps {
   context: WebPartContext;
   pageSize?: number;
   viewType: string;
+  archivalType: string;
   users: any;
 }
